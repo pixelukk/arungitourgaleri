@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arunga Tour Recap</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Montserrat", Arial, sans-serif;
+        margin: 0;
+        background: #f5f7fa;
+        color: #222;
+      }
+      header {
+        position: relative;
+        min-height: 340px;
+        background: linear-gradient(
+            rgba(30, 30, 60, 0.6),
+            rgba(30, 30, 60, 0.6)
+          ),
+          url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80")
+            center/cover fixed;
+        color: #fff;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        z-index: 2;
+        position: relative;
+      }
+      header p {
+        z-index: 2;
+        position: relative;
+      }
+      header::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(30, 30, 60, 0.5);
+        z-index: 1;
+      }
+      main {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 0 20px;
+      }
+      .gallery-title {
+        font-size: 1.7rem;
+        font-weight: 700;
+        margin-bottom: 18px;
+        color: #4e54c8;
+      }
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 24px;
+      }
+      .gallery-item {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+        overflow: hidden;
+        position: relative;
+        transition: box-shadow 0.2s;
+      }
+      .gallery-item:hover {
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.13);
+      }
+      .gallery-item img {
+        width: 100%;
+        height: 180px; /* Tambahkan tinggi tetap */
+        object-fit: cover; /* Crop gambar agar proporsional */
+        display: block;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .gallery-item img:hover {
+        transform: scale(1.04);
+      }
+      .gallery-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 14px;
+        background: #f5f7fa;
+      }
+      .gallery-actions button,
+      .gallery-actions a {
+        background: #4e54c8;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 14px;
+        font-size: 0.95rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.2s;
+      }
+      .gallery-actions button:hover,
+      .gallery-actions a:hover {
+        background: #8f94fb;
+      }
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+      }
+      .modal-content {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        max-width: 90vw;
+        max-height: 90vh;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        position: relative;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .modal-content img {
+        max-width: none;
+        max-height: 70vh;
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: 16px;
+      }
+      .modal-close {
+        position: absolute;
+        top: 12px;
+        right: 18px;
+        font-size: 2rem;
+        color: #4e54c8;
+        background: none;
+        border: none;
+        cursor: pointer;
+        z-index: 2;
+      }
+      .modal-nav {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin-bottom: 8px;
+      }
+      .modal-nav button {
+        background: #4e54c8;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 18px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .modal-nav button:hover {
+        background: #8f94fb;
+      }
+      footer {
+        background: #222;
+        color: #fff;
+        padding: 36px 0 24px 0;
+        margin-top: 40px;
+        font-size: 1rem;
+      }
+      .footer-container {
+        max-width: 900px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+      }
+      .footer-brand {
+        font-size: 1.3rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+      }
+      .footer-since {
+        font-size: 1rem;
+        font-weight: 400;
+        color: #8f94fb;
+        margin-left: 8px;
+      }
+      .footer-desc {
+        text-align: center;
+        max-width: 600px;
+        color: #ccc;
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+      .footer-contact {
+        text-align: center;
+        font-size: 1rem;
+        margin-bottom: 4px;
+      }
+      .footer-contact a {
+        color: #8f94fb;
+        text-decoration: none;
+        margin: 0 4px;
+        font-weight: 500;
+      }
+      .footer-contact a:hover {
+        text-decoration: underline;
+      }
+      .footer-copyright {
+        font-size: 0.95rem;
+        color: #aaa;
+        margin-top: 8px;
+      }
+      @media (max-width: 600px) {
+        header h1 {
+          font-size: 1.5rem;
+        }
+        .gallery-title {
+          font-size: 1.1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Recap Arungi Tour</h1>
+      <p>Kenangan indah perjalanan bersama Arungi Tour & Travel</p>
+    </header>
+    <main>
+      <div class="gallery-title" style="text-align: center">
+        Galeri Hasil Tour & Travel
+      </div>
+      <!-- Audio player otomatis dan tersembunyi -->
+      <audio id="bgAudio" src="lagu.mp3" autoplay loop hidden></audio>
+      <div class="gallery">
+        <!-- Gallery Item 1 -->
+        <div class="gallery-item">
+          <img src="1.jpg" alt="Foto 1" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="1.jpg" download="1.jpg">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 2 -->
+        <div class="gallery-item">
+          <img src="2.jpeg" alt="Foto 2" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="2.jpeg" download="2.jpeg">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 3 -->
+        <div class="gallery-item">
+          <img src="3.jpg" alt="Foto 3" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="3.jpg" download="3.jpg">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 4 -->
+        <div class="gallery-item">
+          <img src="4.jpg" alt="Foto 4" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="4.jpg" download="4.jpg">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 5 -->
+        <div class="gallery-item">
+          <img src="5.jpg" alt="Foto 5" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="5.jpg" download="5.jpg">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 6 -->
+        <div class="gallery-item">
+          <img src="6.jpg" alt="Foto 6" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="6.jpg" download="6.jpg">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 7 -->
+        <div class="gallery-item">
+          <img src="7.jpeg" alt="Foto 7" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="7.jpeg" download="7.jpeg">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 8 -->
+        <div class="gallery-item">
+          <img src="8.png" alt="Foto 8" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="8.png" download="8.png">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 9 -->
+        <div class="gallery-item">
+          <img src="9.webp" alt="Foto 9" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="9.webp" download="9.webp">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 10 -->
+        <div class="gallery-item">
+          <img src="10.jpg" alt="Foto 10" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="10.jpg" download="10.jpg">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 11 -->
+        <div class="gallery-item">
+          <img src="11.jpg" alt="Foto 11" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="11.jpg" download="11.jpg">Download</a>
+          </div>
+        </div>
+        <!-- Gallery Item 12 -->
+        <div class="gallery-item">
+          <img src="12.png" alt="Foto 12" onclick="openModal(this)" />
+          <div class="gallery-actions">
+            <button onclick="openModal(this.parentNode.previousElementSibling)">
+              Preview
+            </button>
+            <a href="12.png" download="12.png">Download</a>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div class="footer-container">
+        <div class="footer-brand">
+          <strong>Arungi Tour & Travel</strong>
+          <span class="footer-since">| Sejak 2010</span>
+        </div>
+        <div class="footer-desc">
+          Memberikan pengalaman wisata terbaik, aman, dan nyaman ke berbagai
+          destinasi favorit di Indonesia dan mancanegara.
+        </div>
+        <div class="footer-contact">
+          <span>Hubungi kami:</span>
+          <a href="mailto:info@arungitour.com">info@arungitour.com</a>
+          <span>| Telp: 021-12345678</span>
+        </div>
+        <div class="footer-copyright">
+          &copy; 2025 Arungi Tour & Travel. All rights reserved.
+        </div>
+      </div>
+    </footer>
+    <!-- Modal Preview -->
+    <div class="modal" id="imgModal" onclick="closeModal(event)">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeModal(event)">&times;</button>
+        <div class="modal-nav">
+          <button onclick="prevImg(event)">&#8592; Sebelumnya</button>
+          <button onclick="nextImg(event)">Berikutnya &#8594;</button>
+        </div>
+        <img id="modalImg" src="" alt="Preview" />
+      </div>
+    </div>
+    <script>
+      // Audio autoplay & loop manual
+      document.addEventListener("DOMContentLoaded", function () {
+        const audio = document.getElementById("bgAudio");
+
+        // Coba play saat load
+        audio.play().catch(() => {
+          // Kalau gagal (karena autoplay diblock), jalankan setelah klik pertama
+          document.body.addEventListener(
+            "click",
+            function () {
+              audio.play();
+            },
+            { once: true }
+          );
+        });
+      });
+      // Modal slider logic
+      const galleryImgs = Array.from(
+        document.querySelectorAll(".gallery-item img")
+      );
+      let currentIdx = 0;
+
+      function openModal(img) {
+        currentIdx = galleryImgs.indexOf(img);
+        showModalImg();
+        document.getElementById("imgModal").style.display = "flex";
+      }
+
+      function showModalImg() {
+        const modalImg = document.getElementById("modalImg");
+        modalImg.src = galleryImgs[currentIdx].src;
+        modalImg.alt = galleryImgs[currentIdx].alt;
+      }
+
+      function closeModal(event) {
+        if (
+          event.target.classList.contains("modal") ||
+          event.target.classList.contains("modal-close")
+        ) {
+          document.getElementById("imgModal").style.display = "none";
+          document.getElementById("modalImg").src = "";
+        }
+      }
+
+      function prevImg(event) {
+        event.stopPropagation();
+        currentIdx = (currentIdx - 1 + galleryImgs.length) % galleryImgs.length;
+        showModalImg();
+      }
+
+      function nextImg(event) {
+        event.stopPropagation();
+        currentIdx = (currentIdx + 1) % galleryImgs.length;
+        showModalImg();
+      }
+
+      // ESC key to close modal
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          document.getElementById("imgModal").style.display = "none";
+          document.getElementById("modalImg").src = "";
+        }
+        // Arrow keys for slide
+        if (document.getElementById("imgModal").style.display === "flex") {
+          if (e.key === "ArrowLeft") prevImg(e);
+          if (e.key === "ArrowRight") nextImg(e);
+        }
+      });
+    </script>
+  </body>
+</html>
